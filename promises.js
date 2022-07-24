@@ -1,6 +1,6 @@
 const posts = [
-    {title: "post one", body:"this is post one", createAt: new Date().getTime()},
-    {title: "post two", body:"this is post two", createAt: new Date().getTime()},
+    {title: "post one", body:"this is post one"},
+    {title: "post two", body:"this is post two"}
 ]
 
 function getPost() {
@@ -8,18 +8,20 @@ function getPost() {
     setTimeout(()=> {
         posts.forEach((value, index) => {
             //console.log(value.createAt)
-            output += `<li>${value.title} created ${(new Date().getTime() - value.createAt)/1000} seconds ago</li>`
+            output += `<li>${value.title}</li>`
         });
         document.body.innerHTML = output
     },1000)
 }
 
-const updatedDetails = async () => 
+
+
+function createPost(post) 
 {
-    const createPost = (post) => new Promise((resolve, reject) => 
+    return new Promise((resolve, reject) => 
     {
         setTimeout(() => {
-            posts.push({...post, createAt: new Date().getTime()})
+            posts.push(post)
             const err = false
             if(!err) 
             {
@@ -29,63 +31,36 @@ const updatedDetails = async () =>
             }
         }, 1000);
     })
-
-
-    const deletePost =  new Promise((resolve, reject) =>
-        {
-            //console.log(posts.length)
-            setTimeout(() => {
-                while(posts.length>0)
-                {
-                    posts.pop()
-                }
-                const err = posts.length === 0
-                !err ? resolve() : reject("Error: Array is empty now")
-            },1000)
-        })
-
-    // let createP = await createPost
-
-    // let deleteP = await deletePost
-
-    let [createP, deleteP] = await new Promise.all([createP({title:"post three", body:"this is post three"}), deleteP])
-    return (createP, deleteP)
-
+    
 }
 
-updatedDetails().then((createP, deleteP) => console.log(createP, deleteP))
-// function createPost(post) 
-// {
-//     return new Promise((resolve, reject) => 
-//     {
-//         setTimeout(() => {
-//             posts.push({...post, createAt: new Date().getTime()})
-//             const err = false
-//             if(!err) 
-//             {
-//                 resolve()
-//             }else{
-//                 reject("Error: Something went wrong")
-//             }
-//         }, 1000);
-//     })
-    
-// }
+function deletePost() {
+    return new Promise((resolve, reject) =>
+    {
+        //console.log(posts.length)
+        setTimeout(() => {
+            console.log(posts.pop())
+            const err = posts.length === 0
+            !err ? resolve() : reject("Error: Array is empty now")
+        },1000)
+    })
+}
 
-// function deletePost() {
-//     return new Promise((resolve, reject) =>
-//     {
-//         //console.log(posts.length)
-//         setTimeout(() => {
-//             while(posts.length>0)
-//             {
-//                 posts.pop()
-//             }
-//             const err = posts.length === 0
-//             !err ? resolve() : reject("Error: Array is empty now")
-//         },1000)
-//     })
-// }
+const updatedDetails = async () => 
+{
+    try {
+        console.log(await deletePost());
+        } catch (error)
+        {
+            console.log(error);
+        }
+    await createPost({title: 'post three', body: 'this is post three'});
+    await getPost();
+    
+    //await getPost();
+}
+
+updatedDetails()
 // function create4thPost(post) {
 //     return new Promise((resolve, reject) =>
 //     {
